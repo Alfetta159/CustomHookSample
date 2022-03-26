@@ -1,12 +1,17 @@
-import { Container, Row, Col, Alert, Button } from 'reactstrap';
-import { ProcessAlert } from './ProcessAlert';
+import { Container, Row, Col, Button } from 'reactstrap';
+import { ProcessAlert, useProcessAlert } from './ProcessAlert';
 
 function App() {
-    function testFunction(value) {
+  const {
+    setAlert,
+    type,
+  } = useProcessAlert();
+
+  function testFunction(value) {
     switch (value) {
-      case 0: break;
-      case 1: break;
-      case 2: break;
+      case 0: setAlert(false); break;
+      case 1: setAlert(true, 'info', 'Application is ready.'); break;
+      case 2: setAlert(true, 'success', 'Damage repaired, Captain.'); break;
     }
   }
 
@@ -19,12 +24,12 @@ function App() {
       </Row>
       <Row>
         <Col>
-        <ProcessAlert isOpen={true} condition='info' displayValue="Situation normal. How are things with you?"/>
+          <ProcessAlert type={type} />
         </Col></Row>
       <Row>
-      <Col><Button color='secondary' onClick={() => testFunction(2)}>Hide</Button></Col>
-      <Col><Button color='info' onClick={() => testFunction(0)}>Info</Button></Col>
-        <Col><Button color='success' onClick={() => testFunction(1)}>Success</Button></Col>
+        <Col><Button color='secondary' onClick={() => testFunction(0)}>Hide</Button></Col>
+        <Col><Button color='info' onClick={() => testFunction(1)}>Info</Button></Col>
+        <Col><Button color='success' onClick={() => testFunction(2)}>Success</Button></Col>
       </Row>
     </Container >
   );
