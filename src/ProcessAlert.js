@@ -17,17 +17,17 @@ import { Alert, Spinner } from 'reactstrap';
 export function ProcessAlert(props) {
   const {
     isOpen,
-    condition,
+    type,
     displayValue,
     displayValue1,
     displayValue2,
     displayValue3
-  } = props.type;
+  } = props.alertState;
 
-  // Our condition is a very limited set. We are intentionally limiting what the consumer
+  // Our type is a very limited set. We are intentionally limiting what the consumer
   // can show to keep this simple and reusable for the majority of cases.
   function getColor() {
-    switch (condition) {
+    switch (type) {
       case "hide":
       case "info":
       case "working":
@@ -36,14 +36,14 @@ export function ProcessAlert(props) {
       case "warning": return "warning";
       case "error": return "danger";
       case "hint": return "light";
-      case "notavailable":return "dark";
+      case "notavailable": return "dark";
       default: return "secondary";
     }
   }
 
   // Likewise with our corresponding icons...
   function getIcon() {
-    switch (condition) {
+    switch (type) {
       case "hide": return <FontAwesomeIcon color={getColor()} icon={faCircleDot} />;
       case "info": return <FontAwesomeIcon color={getColor()} icon={faCircleExclamation} />;
       case "success": return <FontAwesomeIcon color={getColor()} icon={faCircleCheck} />
@@ -51,7 +51,7 @@ export function ProcessAlert(props) {
       case "error": return <FontAwesomeIcon color={getColor()} icon={faTriangleExclamation} />
       case "hint": return <FontAwesomeIcon color={getColor()} icon={faSun} />
       case "working": return <Spinner color='info' size='sm' />
-      case "notavailable":return <FontAwesomeIcon color={getColor()} icon={faMoon} />
+      case "notavailable": return <FontAwesomeIcon color={getColor()} icon={faMoon} />
       default: return <FontAwesomeIcon icon={faCircleQuestion} />;
     }
   }
@@ -67,44 +67,34 @@ export function ProcessAlert(props) {
 }
 
 // And here is our custom hook. 
-export function useProcessAlert() {
+export function useProcessAlert(isOpen, type, displayValue, displayValue1, displayValue2, displayValue3) {
   // Notice the states are here and not in the ProcessAlert component?
-  const [isOpen, setIsOpen] = useState(false);
-  const [displayValue, setDisplayValue] = useState('');
-  const [displayValue1, setDisplayValue1] = useState(undefined);
-  const [displayValue2, setDisplayValue2] = useState(undefined);
-  const [displayValue3, setDisplayValue3] = useState(undefined);
-  const [type, setType] = useState('hide');
+  const [state, setState] = useState({
+    isOpen: isOpen,
+    type: type,
+    displayValue: displayValue,
+    displayValue1: displayValue1,
+    displayValue2: displayValue2,
+    displayValue3: displayValue3
+  });
 
   // And we furnish a convient function to set the ProcessAlert to 
   // one of the few states that we have created for it.
-  function setAlert(isOpen, condition, displayValue, displayValue1, displayValue2, displayValue3) {
-    setIsOpen(isOpen);
-    setType(condition);
-    setDisplayValue(displayValue);
-    setDisplayValue1(displayValue1);
-    setDisplayValue2(displayValue2);
-    setDisplayValue3(displayValue3);
-  }
-
-  // Likewise, we furnish a function to create the various states as one object
-  // so it can be passed to the ProcessAlert component as one property which
-  // we don't care about (i.e. black box)
-  function getState() {
-    return {
+  function setAlert(isOpen, type, displayValue, displayValue1, displayValue2, displayValue3) {
+    setState({
       isOpen: isOpen,
-      condition: type,
+      type: type,
       displayValue: displayValue,
       displayValue1: displayValue1,
       displayValue2: displayValue2,
       displayValue3: displayValue3
-    };
+    });
   }
 
-  // Here is where we simply return our configuration or type and the function to set
+  // Here is where we simply return our configuration or type and the state to set
   // the alert type.
   return {
-    type: getState(),
+    alertState: state,
     setAlert: setAlert
   }
 }
