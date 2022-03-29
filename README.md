@@ -12,6 +12,6 @@ Nodejs and npm
 1. Install npm packages (run `npm install`)
 1. Run the application locally (run `npm start`)
 
-Be sure to review the `complete` branch as it has a more useable version
+Be sure to review the `[complete](https://github.com/Alfetta159/CustomHookSample/tree/complete)` branch as it has a more useable version
 
 Who thinks this should be an npm package?
